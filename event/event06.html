@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>체크박스</title>
+</head>
+<body>
+  <label>
+    <input type="checkbox" value="선택1"> 선택1
+  </label>
+  <label>
+    <input type="checkbox" value="선택2"> 선택2
+  </label>
+  <label>
+    <input type="checkbox" value="선택3"> 선택3
+  </label>
+  <p id=result></p>
+</body>
+<script>
+  NodeList.prototype.filter = Array.prototype.filter;
+
+  // 3개의 checkbox 중 선택 시 해당 내용을 가져와서 p태그 (id = result)에 출력
+  const checkboxes = document.querySelectorAll("input[type='checkbox']");
+  const result = document.getElementById("result");
+
+  // 체크박스 모두 가져와서
+  checkboxes.forEach((checkbox) => {
+    // 각 체크박스에 이벤트 리스너를 장착
+    checkbox.addEventListener("click", (e) => {
+      // 만약 이번 클릭으로 체크가 되었다면,
+      if(e.target.checked){
+        // span 태그를 생성해서
+        const span = document.createElement("span");
+        // checkbox의 value값을 내용으로 설정
+        span.innerText = e.target.value;
+        // 그리고 p태그 안에 붙이기
+        result.appendChild(span);
+      }else{
+        // 이번 클릭으로 체크가 해제되었다면
+        // p 태그 안에 span태그를 모두 가져와서
+        const spans = document.querySelectorAll("#result span");
+        // 이번에 클릭한 checkbox의 value를 내용으로 하는 span태그를 추출한 뒤
+        const target = spans.filter((span) => span.innerText == e.target.value)[0];
+        // 삭제해준다.
+        target.parentElement.removeChild(target);
+      }
+    });
+  });
+</script>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>체크박스 동의</title>
+</head>
+<body>
+  <form action="" name="myForm">
+    <div>
+        <label>
+            전체 동의
+            <input type="checkbox" name="all" class="all">
+        </label>
+    </div>
+    <div>
+        <label>
+            서비스 이용약관 동의
+            <input type="checkbox" name="term1" class="term">
+        </label>
+    </div>
+    <div>
+        <label>
+            광고 수신 동의
+            <input type="checkbox" name="term2" class="term">
+        </label>
+    </div>
+    <div>
+        <label>
+            개인 정보 이용약관 동의
+            <input type="checkbox" name="term3" class="term">
+        </label>
+    </div>
+  </form>
+</body>
+<script>
+  NodeList.prototype.map = Array.prototype.map;
+
+  const all = document.querySelector("input.all");
+  const terms = document.querySelectorAll("input.term");
+
+  // 전체 동의를 클릭했을 때
+  all.addEventListener("click", () => {
+    // 각 동의 항목 모두
+    terms.forEach((term) => {
+      // 전체 항목의 상태와 동일하게 맞춰준다.
+      term.checked = all.checked;
+    });
+  });
+
+  // 각 동의 항목을
+  terms.forEach((term) => {
+    // 클릭했을 경우
+    term.addEventListener("click", (e) => {
+      // 전체 동의 상태는 각 동의 항목이 true인 개수가 3개일 때와 아닐 때의 결과로 맞춰준다.
+      all.checked = terms.map((term) => term.checked).filter((checked) => checked).length == 3;
+    });
+  });
+</script>
+</html>

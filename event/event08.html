@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>비밀번호 표시</title>
+  <style>
+    div.mark {
+      background-image: url('./close.jpg');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      width: 40px;
+      height: 20px;
+      cursor: pointer;
+    }
+    form {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <form action="">
+    <label>
+      <input name="password" type="password" placeholder="비밀번호를 입력하세요.">
+    </label>
+    <div class="mark">
+      <!-- <a href="javascript:void(0)">비밀번호 표시</a> -->
+    </div>
+  </form>
+</body>
+<script>
+  // document.querySelector("a").addEventListener("click", (e) => {
+  //   const input = document.querySelector("input[name='password']");
+  //   input.setAttribute("type", input.type === 'text' ? 'password' : 'text');
+  // });
+
+  const mark = document.querySelector("div.mark");
+  mark.addEventListener("click", (e) => {
+    const input = document.querySelector("input[name='password']");
+    if(input.type === 'text'){
+      e.target.style.backgroundImage = `url('./close.jpg')`;
+      input.setAttribute("type", 'password');
+
+    }else{
+      e.target.style.backgroundImage = `url('./open.jpg')`;
+      input.setAttribute("type", 'text');
+
+    }
+    
+  });
+</script>
+</html>

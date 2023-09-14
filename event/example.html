@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    div.photo {
+      flex-direction: column;
+      align-items: center;
+      display: flex;
+      width: 100px;
+    }
+
+    div.photo-wrapper {
+      display: flex;
+      justify-content: space-evenly;
+      height: 300px;
+    }
+
+    div.number-wrapper {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      font-size: 20px;
+      align-items: center;
+    }
+
+    div.number-wrapper div {
+      margin: 10px;
+      cursor: pointer;
+    }
+
+    div.number-container{
+      display: flex;
+    }
+  </style>
+  <body>
+    <div class="photo-wrapper"></div>
+    <div class="number-wrapper">
+      <div class="realPrev"><<</div>
+      <div class="prev"><</div>
+      <div class="number-container"></div>
+      <div class="next">></div>
+      <div class="realNext">>></div>
+    </div>
+  </body>
+  <script>
+    const wrapper = document.querySelector('div.photo-wrapper');
+    const numberContainer = document.querySelector('div.number-container');
+    const prev = document.querySelector('div.prev');
+    const next = document.querySelector('div.next');
+    const realPrev = document.querySelector('div.realPrev');
+    const realNext = document.querySelector('div.realNext');
+    const unit = 10;
+    const pageUnit = 5;
+    let target = 1;
+    let limit = target * unit;
+    let endPage = Math.ceil(target / pageUnit) * pageUnit;
+    let startPage = endPage - pageUnit + 1;
+    let realEndPage = Math.ceil(5000 / unit);
+
+    // 최종 화면 뿌리는 함수
+    function showView(target){
+      pagination(target);
+      showPageNumber(startPage, endPage);
+      showPhotos(offset, limit);
+      movePage(document.querySelectorAll('div.number'));
+      if(startPage == 1){
+        prev.style.display = 'none';
+        realPrev.style.display = 'none';
+      } else {
+        prev.style.display = 'block';
+        realPrev.style.display = 'block';
+      }
+      if(endPage == realEndPage){
+        next.style.display = 'none';
+        realNext.style.display = 'none';
+      } else {
+        next.style.display = 'block';
+        realNext.style.display = 'block';
+      }
+    }
+
+    // 페이지 숫자 보이는 함수
+    function showPageNumber(startPage, endPage){
+      numberContainer.innerHTML = ""
+      for(i = startPage; i <= endPage; i++){
+        numberContainer.innerHTML += `<div class="number">${i}</div>`;
+      }  
+    }
+    
+    // 페이징 처리 셋팅 함수
+    function pagination(target) {
+      limit = target * unit;
+      offset = limit - unit;
+      endPage = Math.ceil(target / pageUnit) * pageUnit;
+      startPage = endPage - pageUnit + 1;
+    }
+
+    // fetch로 데이터 불러오는 함수
+    function datas(url) {
+      return fetch(url)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`response: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((photos) => {
+          if (!photos || photos.length == 0) {
+            throw new Error('none result');
+          }
+          return photos.reverse();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
+    // 사용자가 요청한 페이지 받기
+    function movePage(numbers){
+      numbers.forEach((number) => {
+        number.addEventListener('click', (e) => {
+          target = e.target.innerText;
+          showView(target);
+        });
+      });
+    }
+
+    // 요청에 맞는 자료 잘라내서 화면에 뿌리는 함수
+    function showPhotos(offset, limit) {
+      photos
+        .then((photos) => {
+          return photos.slice(offset, limit);
+        })
+        .then((photos) => {
+          wrapper.innerHTML = '';
+          photos.forEach((photo) => {
+            wrapper.innerHTML += `
+                  <div class="photo">
+                    <img width="100px" src="${photo.thumbnailUrl}" alt="" />
+                    <div class="title">${photo.id}. ${photo.title}</div>
+                  </div>
+                `;
+          });
+        });
+    }
+
+    // url로 데이터 받아오기
+    const photos = datas('https://jsonplaceholder.typicode.com/photos');
+
+    // 첫 화면 뿌리기
+    showView(target);
+
+    // 이전 버튼
+    prev.addEventListener('click', () => {
+      target = startPage - 1;
+      showView(target);
+    });
+
+    // 다음 버튼
+    next.addEventListener('click', () => {
+      target = endPage + 1;
+      showView(target);
+    });
+
+    // 맨 앞으로 버튼
+    realPrev.addEventListener('click', () => {
+      target = 1;
+      showView(target);
+    });
+
+    // 맨 뒤로 버튼
+    realNext.addEventListener('click', () => {
+      target = realEndPage;
+      showView(target);
+    });
+
+  </script>
+</html>

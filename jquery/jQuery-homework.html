@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>jQuery 요금표</title>
+  </head>
+  <style>
+    html {
+      height: 100%;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    .main-wrap {
+      width: 100%;
+    }
+    .wrap {
+      position: relative;
+      height: 250px;
+      width: 523px;
+      block-size: 250px;
+      border-collapse: collapse;
+      margin: 0 auto;
+    }
+    .wrap h1 {
+      text-align: center;
+      top: 10px;
+      margin-top: 60px;
+    }
+
+    h1.title {
+      font-size: 25px;
+      margin-bottom: 4px;
+    }
+
+    table {
+      border: 1px solid;
+      block-size: 166px;
+      width: 520px;
+      text-align: center;
+      background-color: rgb(255, 255, 255);
+    }
+
+    .border1 {
+      text-align: center;
+    }
+    th {
+      background-color: rgb(237, 247, 123);
+    }
+    td,
+    th {
+      border: 1px solid;
+      border-collapse: collapse;
+      text-align: center;
+    }
+
+    fieldset {
+      text-align: center;
+    }
+
+    button {
+      margin-right: -32px;
+      margin-left: 5px;
+      border-radius: 15%;
+      cursor: pointer;
+    }
+  </style>
+  <body>
+    <div class="main-wrap">
+      <div class="wrap">
+        <h1 class="title">요금표</h1>
+        <table class="border1">
+          <tr>
+            <th>구분</th>
+            <th>요금</th>
+          </tr>
+          <tr>
+            <td>아동</td>
+            <td>무료</td>
+          </tr>
+          <tr>
+            <td>청소년</td>
+            <td>2000원</td>
+          </tr>
+          <tr>
+            <td>성인</td>
+            <td>5000원</td>
+          </tr>
+        </table>
+        <div>
+          <fieldset>
+            <legend>구분</legend>
+            <input type="text" /><button class="search-button">확인</button>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script>
+    const $tr = $("tr");
+    const $td = $("td");
+    const $input = $("input[type='text']");
+    const $table = $("#border1");
+    const $button = $(".search-button");
+
+    $button.on("click", () => {
+      let found = false;
+      $tr.each((i, tr) => {
+        if (
+          $(tr).find("td").eq(0).text().replaceAll("★", "") === $input.val()
+        ) {
+          $(tr).find("td").css("background-color", "red");
+          $(tr)
+            .find("td")
+            .eq(0)
+            .text(`★${$(tr).find("td").eq(0).text().replace("★", "")}`);
+          found = true;
+        } else {
+          $(tr).find("td").css("background-color", "white");
+          $(tr)
+            .find("td")
+            .eq(0)
+            .text(`${$(tr).find("td").eq(0).text().replace("★", "")}`);
+        }
+      });
+      if (!found) {
+        alert("다시 시도해주세요");
+      }
+    });
+  </script>
+</html>
+
+<!-- 목록 입력시 구분 부분 글자 앞에 ★ 표시
+//      선택된 줄은 빨간색으로 변경
+//      목록에 없는 값 입력시 다시 시도해주세요 알람-->

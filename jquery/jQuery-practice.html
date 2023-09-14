@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fetch</title>
+    <style>
+      h1 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      
+      #gallery {
+        margin: 0 auto;
+        display: flex;
+        width: 950px;
+        flex-wrap: wrap;
+      }
+
+      div.gallery-item {
+        padding: 0 20px;
+        width: 150px;
+        height: 300px;
+      }
+
+      div.image {
+        position: relative;
+        cursor: pointer;
+        background-image: url(./mario.png);
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 96px;
+        height: 115px;
+        top: -584px;
+        left: 321px;
+      }
+    </style>
+  </head>
+  <h1><strong>Gallery</strong></h1>
+  <body> 
+      <div id="gallery">
+        <!-- <div class="gallery-item">
+          <div class="image"></div>
+        </div> -->
+      </div>
+    <input type="file" id="attach" style="display: none" />
+  </body>
+  <script>
+   
+    const $thumbnail = $("thumbnailUrl");
+    const $title = $("title");
+
+    fetch("https://jsonplaceholder.typicode.com/photos")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`response: ${response.status}`);
+        }
+        return response.json();
+      })
+   
+      .then((photos) => {
+        if (!photos || photos.length == 0) {
+          throw new Error("none result");
+        }
+        return photos.reverse().map((photo, i) => {
+          return { title: photo.title, thumbnailUrl: photo.thumbnailUrl };
+        });
+      })
+      .then((data) => {
+        return data.slice(0, 10);
+      })
+      .then((data) => {
+        const $galleryElement = $("gallery");
+        data.forEach((item) => {
+          const $galleryItem = $("div");
+          const $thumbnailImg = $("img");
+          const $gallerytitle = $("p");
+          $thumbnailImg.attr('src', item.thumbnailUrl);
+          $gallerytitle.text(item.title);
+          $galleryItem.prop('classList').add("gallery-item");
+          $galleryItem.append($thumbnailImg);
+          $galleryItem.append($gallerytitle);
+          $galleryElement.append($galleryItem);
+        });
+      });
+
+    const $input = $("attach");
+    const $iconimage = $("div.image");
+    input.addEventListener("change", (e) => {
+      console.log("업로드! 😁");
+      const reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onload = (e) => {
+        cancel.style.display = "block";
+        const path = e.target.result;
+        if (path.includes("image")) {
+          iconimage.style.backgroundImage = `url('${path}')`;
+        } else {
+          iconimage.style.backgroundImage = `url('./happy.png')`;
+        }
+      };
+    });
+
+
+    console.log(
+      new Array(10)
+        .fill()
+        .map((data, i) => i + 1)
+        .slice(0, 5)
+    );
+  </script>
+</html>

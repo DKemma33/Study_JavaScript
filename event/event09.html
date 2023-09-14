@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fetch</title>
+    <style>
+      h1 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      
+      #gallery {
+        margin: 0 auto;
+        display: flex;
+        width: 950px;
+        flex-wrap: wrap;
+      }
+
+      div.gallery-item {
+        padding: 0 20px;
+        width: 150px;
+        height: 300px;
+      }
+
+      div.image {
+        position: relative;
+        cursor: pointer;
+        background-image: url(./mario.png);
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 96px;
+        height: 115px;
+        top: -584px;
+        left: 321px;
+      }
+    </style>
+  </head>
+  <h1><strong>Gallery</strong></h1>
+  <body> 
+      <div id="gallery">
+        <!-- <div class="gallery-item">
+          <div class="image"></div>
+        </div> -->
+      </div>
+    <input type="file" id="attach" style="display: none" />
+  </body>
+  <script>
+    // fetch를 사용하여 아래 경로로 요청하기
+    const thumbnail = document.querySelector("thumbnailUrl");
+    const title = document.getElementById("title");
+
+    // fetch(Promise)로 url을 불러오고 비동기작업 완료시에 .then 메서드 함수가 실행된다
+    // if  () => {} 화살표 함수로 response응답 이 만약 응담이 없거나 실패할시에
+    // throw 새로운 에러 를 발생시킨다 `` 으로 그 결과를 문자열로 알려준다
+    // 비동기 작업 완료시에는 response 객체에 json() 호출 -> json 형식으로 파싱 -> javascript 객체로 변환 해준다
+    fetch("https://jsonplaceholder.typicode.com/photos")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`response: ${response.status}`);
+        }
+        return response.json();
+      })
+      // 변환 시켜준 객체를 .then (promise 메서드함수)에 가져온 값의 이름을 photos으로 정의 해주고
+      // 화살표 함수로 photos의 길이가 0 이거나 photos 값이 없다면 에러 코드 none result를 반환해준다
+      .then((photos) => {
+        if (!photos || photos.length == 0) {
+          throw new Error("none result");
+        }
+        return photos.reverse().map((photo, i) => {
+          return { title: photo.title, thumbnailUrl: photo.thumbnailUrl };
+        });
+      })
+      .then((data) => {
+        return data.slice(0, 10);
+      })
+      .then((data) => {
+        const galleryElement = document.getElementById("gallery");
+        data.forEach((item) => {
+          const galleryItem = document.createElement("div");
+          const thumbnailImg = document.createElement("img");
+          const gallerytitle = document.createElement("p");
+          thumbnailImg.src = item.thumbnailUrl;
+          gallerytitle.innerHTML = item.title;
+          galleryItem.classList.add("gallery-item");
+          galleryItem.append(thumbnailImg);
+          galleryItem.append(gallerytitle);
+          galleryElement.append(galleryItem);
+        });
+      });
+
+    const input = document.getElementById("attach");
+    const iconimage = document.querySelector("div.image");
+    input.addEventListener("change", (e) => {
+      console.log("업로드! 😁");
+      const reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onload = (e) => {
+        cancel.style.display = "block";
+        const path = e.target.result;
+        if (path.includes("image")) {
+          iconimage.style.backgroundImage = `url('${path}')`;
+        } else {
+          iconimage.style.backgroundImage = `url('./happy.png')`;
+        }
+      };
+    });
+
+    // https://jsonplaceholder.typicode.com/photos
+    // 데이터 중 썸네일을 활용하여 목록을 구성하기
+    // 각 데이터의 title도 출력해주기
+    // 사용자가 요청한 페이지에 맞게 데이터를 출력해준다.
+    // 한 페이지당, 10개씩 출력되며
+    // 3페이지일 경우 21번부터 30번까지 출력되어야 한다.
+
+    // 현재 페이지 * 글 개수: limit
+    // limit - 현재 페이지 - 1: offset
+
+    // 페이지 단위는 5단위
+    // Math.ceil(현재 페이지 / 페이지 단위) * 페이지 단위: endPage
+    // endPage - 페이지 단위 + 1: startPage
+    // Math.ceil(전체 개수 / 페이지 단위): realendpage
+    // 최신순으로 출력
+    console.log(
+      new Array(10)
+        .fill()
+        .map((data, i) => i + 1)
+        .slice(0, 5)
+    );
+  </script>
+</html>
