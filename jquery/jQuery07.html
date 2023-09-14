@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fetch</title>
+  <style>
+    #wrap {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    #wrap div.photo {
+      margin-right: 10px;
+      float: left;
+    }
+
+    #paging {
+      text-align: center;
+      clear: left;
+    }
+
+
+  </style>
+</head>
+<body>
+  <div id="wrap"></div>
+  <div id="paging"></div>
+</body>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
+  // fetch를 사용하여 아래 경로로 요청하기
+  // https://jsonplaceholder.typicode.com/photos
+  // 데이터 중 썸네일을 활용하여 목록을 구성하기
+  // 각 데이터의 title도 출력해주기
+  // 사용자가 요청한 페이지에 맞게 데이터를 출력해준다.
+  // 한 페이지당, 10개씩 출력되며
+  // 3페이지일 경우 21번부터 30번까지 출력되어야 한다.
+
+  // 현재 페이지 * 글 개수: limit
+  // limit - 현재 페이지 - 1: offset
+
+  // 페이지 단위는 5단위
+  // Math.ceil(현재 페이지 / 페이지 단위) * 페이지 단위: endPage
+  // endPage - 페이지 단위 + 1: startPage
+  // Math.ceil(전체 개수 / 페이지 당 행 개수): realendpage
+  // 최신순으로 출력
+  // 이전 버튼, 다음 버튼 제작
+
+  // 이전 버튼 누를 시 이전 페이지 단위로
+  // 예) 현재 페이지: 7페이지, 이전 버튼 누를 시 5페이지로 이동시켜 1~5가 보이도록 제작
+  // 다음 버튼은 위와 동일하게 다음 페이지 단위로 이동시킨다.
+  
+  let page = 1;
+  
+  async function requestPhotos(){
+    return fetch("https://jsonplaceholder.typicode.com/photos").then((response) => response.json())
+  }
+
+  async function getPhotos(){
+    const photos = await requestPhotos();
+    return new Promise((resolve) => {
+      if(photos.length != 0){
+        resolve({
+          total: photos.length,
+          photos: photos.reverse()
+        })
+      }
+    });
+  }
+  
+  function showPhotos(props){
+    console.log(props);
+
+    // 비구조 할당
+    // KEY값으로만 가능!
+    const {total, photos} = props;
+    
+    const rowCount = 10;
+    const limit = page * rowCount;
+    const offset = limit - rowCount;
+    const pageCount = 5;
+    const endPage = Math.ceil(page / pageCount) * pageCount;
+    const startPage = endPage - pageCount + 1;
+    const realEnd = Math.ceil(total / rowCount);
+    // const wrap = document.getElementById("wrap");
+    // const paging = document.getElementById("paging");
+    const $wrap = $("#wrap");
+    const $paging = $("#paging");
+
+    const photosWithPage = photos.slice(offset, limit);
+
+    let text = ``, pagingText = ``;
+    photosWithPage.forEach((photo) => {
+      text += `
+        <div class="photo">
+          <img src="${photo.thumbnailUrl}">
+        </div>
+      `
+    });
+    if(startPage > 1){
+      pagingText += `
+        <a href="javascript:void(0)"><span class="${1}">맨 앞으로 이동</span></a>
+        <a href="javascript:void(0)"><img class="${startPage - 1}" src="left.png" width="20px"></a>
+      `;
+    }
+    for(let i=startPage; i<=endPage; i++){
+      console.log(page, i);
+      if(page === i){
+        pagingText += `
+          <span>${i}</span>
+      `;
+      }else{
+        pagingText += `
+          <a href="javascript:void(0)"><span class="${i}">${i}</span></a>
+        `;
+      }
+    }
+    if(endPage < realEnd){
+      pagingText += `
+        <a href="javascript:void(0)"><img class="${endPage + 1}" src="right.png" width="20px"></a>
+        <a href="javascript:void(0)"><span class="${realEnd}">맨 끝으로 이동</span></a>
+      `;
+    }
+    
+
+    $wrap.html(text);
+    $paging.html(pagingText);
+    
+  }
+
+  getPhotos().then(showPhotos)
+
+  const paging = document.getElementById("paging");
+  paging.addEventListener("click", (e) => {
+    // if(e.target.className){
+    // if($(e.target).attr("class")) {
+    if($(e.target).prop("class")){
+      page = parseInt(e.target.className);
+      getPhotos().then(showPhotos);
+    }
+  });
+
+</script>
+</html>

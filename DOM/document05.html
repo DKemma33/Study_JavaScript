@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>객체를 동적으로 생성, 삽입, 삭제</title>
+</head>
+<body>
+  <p>DOM 트리에 동적으로 객체를 삽입할 수 있다.</p>
+  <p>createElement("태그명"), appendChild("태그객체"), removeChild("태그객체")</p>
+  <p>위 3개의 메소드를 이용해서 새로운 객체를 생성, 삽입, 삭제한다.</p>
+  <a href="javascript:divBox()">DIV 생성</a>
+</body>
+<script>
+  // Math.floor(Math.random() * n) : 0 ~ n-1 랜덤값
+
+  //   function randomNumber(num){
+  //     return  Math.floor(Math.random() * num);
+  //   }
+  // // ==========================================================================================
+  // 생성할 때마다 랜덤한 배경색이 출력되고,
+  // 각 DIV 객체 내용에 번호가 붙도록 한다.
+  // ----------------------------------------------------------------------------------------
+  let count = 0;
+  // let 키워드로 count를 변수로 선언 대입 연산자로 0; 을 값으로 담아준다
+  function createDIV(){
+  //  함수 이름을 createDIV로 선언 () 값을 담아두지 않고 함수로 사용한다
+    count++; 
+    //createDIV 함수가 실행될때 
+    const newDIV = document.createElement("div");
+    //  대입연산자 -> 왼쪽에 newDiv는 변수(저장공간) 오른쪽에 있는 값을 담고있게군
+    //. ->document가 객체인가보다 그 객체안에 createElement라는 함수가 있나보다
+    //함수를 사용했는데 소괄호 안에 문자열 값이있네 -> 이 함수는 전달받은 문자열값으로 어떠한걸 생성하나보다 -> 리턴값이있다
+    //->통쨰로가 어떠한 값인가보다
+    //객체 -> dom
+    newDIV.innerHTML = `새로 생성된 div${count}입니다.`;
+    // newDIV의 innerHTML로 접근(문자열 안의 태그를 태그로 인식한다) 대입 연산자로 백틱 (Template String) 을 사용하여
+    // 문자열을 값에 ${}(템플릿 리터럴(Template Literal)을 사용해서 위의 count를 담아준다 
+    newDIV.style.backgroundColor = `rgb(${Math.floor(Math.random() * 256)},${randomNumber(256)},${randomNumber(256)})`;
+    // count되는 문자열을 담고있는 newDIV객체에 다시 style 속성으로 접근해서 style의 backgroundColor 를 불러왔다 = 
+    // 대입 연산자-> ``백틱으로 문자열 값에 rgb(${위에 선언해놓은 랜덤 함수(randomNumber(256))})을 3번 넣어 준다
+    // rgb는 (255, 0, 0)은 빨간색, (0, 255, 0)은 초록색, (0, 0, 255)는 파란색 이라고 생각하면 되고 
+    // 이 3개의 색상의 조합으로 색이 나온다 그래서 rgb값에 3번의 같은 랜덤함수들을 넣어 줘야 한다 
+    // randomNumber에 256을 담아준 이유는 agb가 0~255개의 정수 값으로 표현 하기 위함이다
+    document.body.appendChild(newDIV);
+    // document 객체로 body요소로 접근. appendChild라는 메소드에 newDIV 를 담아준다
+    // append는 추가하는 기능이고 child는 자식 -> 자식 값을 body에 추가해준다
+
+    newDIV.onclick = function(){
+    // newDIV에 onclick 속성을 사용하여 클릭으로 함수 값이 실행될수 있게 해준다
+      count--;
+    // click 하면 count가 - 마이너스가 된다
+      this.parentElement.removeChild(this);
+    // this 이 부모요소로 접근 removeChild 메소드(삭제자식요소를) 로 선택한 값이 삭제된다
+    }
+  }
+// =============================================================================================
+    const colors = new Array("yellow", "red", "blue", "green", "skyblue", "orange", "pink");
+  globalThis.number = 0;
+  function createDIV(){
+    const i = Math.floor(Math.random() * colors.length);
+    const newDIV = document.createElement("div");
+    newDIV.innerHTML = `새로 생성된 div${++number}입니다.`;
+    newDIV.style.backgroundColor = colors[i];
+    document.body.appendChild(newDIV);
+
+    newDIV.onclick = function(){
+      this.parentElement.removeChild(this);
+    }
+  }
+</script>
+</html>

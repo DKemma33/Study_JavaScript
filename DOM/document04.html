@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS 선택자를 이용한 선택</title>
+</head>
+<body>
+  <h1>CSS 선택자를 이용한 선택</h1>  
+  <p>첫 번째 단락이에요!</p>
+  <ul>
+    <li class="odd">치킨</li>
+    <li class="even">집</li>
+    <li class="odd">플레이스테이션</li>
+    <li class="even">남자친구</li>
+    <li class="odd">여자친구</li>
+  </ul>
+</body>
+<script>
+  const p = document.querySelector("p");
+  // DOM 은 document object model 웹페이지 구조를 프로그래밍 적으로 조작 가능하다(프로그래밍 API)
+  // const는 p를 상수로 선언 해줘서 값이 변할수 없다/ 
+  //대입연산자 -> 왼쪽 p 변수(저장공간) -> document.객체 안에 querySelector("p")함수가 있다
+  // p 변수는 querySelector 함수 값으로 "p"를 가져온다./ querySelector는 document 객체의 메서드중 하나이다
+  const oddList = document.querySelectorAll("li.odd");
+  // 대입연산자 -> 왼쪽 oddList 변수에 -> document.객체 (. dot연산자)로 querySelectorAll함수 안에
+  //  값인 ("li에 odd class를 불러온다")
+  // oddList는 querySelector에 All을 사용하여 모든 li의 odd값을 불러온다. 만약 All을 붙여주지 않으면
+  // 제일첫번째 li.odd 클래스 의 값이 나온다
+  const evenList = document.querySelectorAll("li.even");
+  const list = document.querySelectorAll("li");
+  // list 변수에 대입연산자로 document객체를 통해 querySelectorAll 함수로 li
+// -----------------------------------------------------------------------------------------------
+  // innerHTML은 값 안에 태그를 태그로 인식하여 표현한다.
+  p.innerHTML = "<h1>반갑습니다!</h1>";
+  // innerText는 값 안에 태그를 문자열로 인식하여 문자 그대로 출력된다.
+  // p.innerText = "<h1>반갑습니다!</h1>";
+
+  // 홀수의 글자 크기는 22px로, 짝수의 글자 크기는 14px로 변경하고,
+  // oddList.forEach((odd) => odd.style.fontSize = "22px");
+  // evenList.forEach((even) => even.style.fontSize = "14px");
+  list.forEach((li) => li.style.fontSize = li.className === 'odd' ? "22px" : "14px");
+  // 선언해놓은 list를 .연산자로 forEach(Array 객체의 메서드 중 하나)에 접근
+  // forEach 메서드를 사용하여 li 화살표 함수로 li.요소에 style.속성을 사용하여 fontSiz를 대입 연산자로 
+  // li의 className 이 odd인지 ? 확인후 true면 font를 22px로 설정하고 : 아니면 14px로 설정한다
+
+  // 전체 목록 중에 "친구"가 포함되어 있다면 글자색을 빨간색으로 변경하기
+  NodeList.prototype.filter = Array.prototype.filter;
+  list.filter((li) => li.innerText.includes('친구')).forEach((li) => li.style.color = 'red');
+
+</script>
+</html>

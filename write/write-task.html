@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>document.write() 실습</title>
+</head>
+<body>
+  <!-- 
+    document.write() 실습
+    --------------------------------------------(hr 태그)
+
+    나의 이름은 000이고,
+    나이는 00살, 만 00살입니다.
+   -->
+   ``
+</body>
+<script>
+  with(document){
+    write("<h3>나의 이름은 장동혁 이고</h3>");
+    write("<h3>나이는 30살, 만 " + (30 - 1) + "살입니다.</h3>")
+    write("<h3>나이는 30살, 만 " + (30 * 5) + "살입니다.</h3>")
+    // 템플릿 리터럴
+    write(`<h3>나이는 30살, 만 ${30 - 1}살입니다.</h3>`)
+  }
+</script>
+</html>

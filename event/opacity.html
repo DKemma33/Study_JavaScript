@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>투명도</title>
+  <style>
+    div {
+      width: 200px;
+      height: 200px;
+    }
+
+    #wrap {
+      position: relative;
+    }
+
+    #wrap div {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #wrap div:first-child {
+      background-color: aqua;
+    }
+
+    #wrap div:last-child {
+      display: none;
+      background-color: black;
+      opacity: 60%;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div class="image"></div>
+    <div class="title">안녕하세요!</div>
+  </div>
+</body>
+<script>
+  const wrap = document.querySelector("#wrap");
+  const title = document.querySelector("div.title");
+  wrap.addEventListener("mouseover", () => {
+    title.style.display = "flex";
+  });
+
+  wrap.addEventListener("mouseout", () => {
+    title.style.display = "none";
+  })
+</script>
+</html>

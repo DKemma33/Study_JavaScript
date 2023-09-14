@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jQuery 실습</title>
+</head>
+<body>
+  <label>
+    <input type="checkbox" value="선택1"> 선택1
+  </label>
+  <label>
+    <input type="checkbox" value="선택2"> 선택2
+  </label>
+  <label>
+    <input type="checkbox" value="선택3"> 선택3
+  </label>
+  <p id=result></p>
+</body>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
+  const $checkboxes = $("input[type='checkbox']");
+  const $result = $("#result");
+
+  $checkboxes.on("click", (e) =>{
+    if(e.target.checked){
+      $result.append(`<span>${e.target.value}</span>`)
+
+    }else{
+      const $spans = $("#result span");
+      const $target = $spans.filter((i, span) => span.innerText === e.target.value).eq(0);
+      $target.remove()
+    }
+  });
+ 
+</script>
+</html>
